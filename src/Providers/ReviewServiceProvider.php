@@ -89,7 +89,7 @@ class ReviewServiceProvider extends BasePluginServiceProvider
     protected function routeDescriptions(): array
     {
         return [
-            //
+            'review.index' => trans('review::messages.title')
         ];
     }
 
