@@ -1,9 +1,9 @@
 {
     "id": "review",
-    "name": "review",
+    "name": "Review",
     "description": "Plugin for Azuriom",
     "version": "1.0.0",
-    "url": "https://azuriom.com",
+    "url": "https://market.azuriom.com/resources/175",
     "authors": [
         "Azuriom"
     ],
