@@ -1,15 +1,16 @@
 {
     "id": "review",
-    "name": "Review",
-    "description": "Plugin for Azuriom",
-    "version": "1.0.0",
+    "name": "review",
+    "description": "Plugin to add a review system to your website.",
+    "version": "1.0.1",
     "url": "https://market.azuriom.com/resources/175",
     "authors": [
-        "Azuriom"
+        "Bricec6"
     ],
     "azuriom_api": "1.1.0",
     "providers": [
         "\\Azuriom\\Plugin\\Review\\Providers\\ReviewServiceProvider",
         "\\Azuriom\\Plugin\\Review\\Providers\\RouteServiceProvider"
-    ]
+    ],
+    "apiId": 175
 }
