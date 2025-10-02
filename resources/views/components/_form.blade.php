@@ -1,4 +1,4 @@
-@can('create', \Azuriom\Plugin\Review\Models\Review::class)
+@can('review.create')
     <div class="card mt-4">
         <div class="card-body">
             <h3 class="card-title">
@@ -13,7 +13,7 @@
                         <label class="form-label" for="rating">{{ trans('review::messages.form.rating') }}</label>
 
                         <select class="form-select @error('currency') is-invalid @enderror" id="rating" name="rating">
-                            <option value="1">1</option>
+                            <option value="1" selected>1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
@@ -23,7 +23,7 @@
 
                     <div class="flex-grow-1 mb-3">
                         <label class="form-label" for="title">{{ trans('review::messages.form.title_field') }}</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="title"
+                        <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
                                name="title" required>
 
                         @error('title')

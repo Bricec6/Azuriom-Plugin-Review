@@ -9,6 +9,7 @@ return [
     ],
     'permissions' => [
         "create" => "Créer un avis",
+        "delete.other" => "Supprimer un avis",
     ],
     'logs' => [
         "reviews-reviews" => [

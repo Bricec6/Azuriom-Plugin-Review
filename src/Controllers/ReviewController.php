@@ -8,13 +8,6 @@ use Azuriom\Plugin\Review\Requests\ReviewRequest;
 
 class ReviewController extends Controller
 {
-    /**
-     * Construct a new ReviewController instance.
-     */
-    public function __construct()
-    {
-        $this->authorizeResource(Review::class);
-    }
 
     /**
      * Store a newly created resource in storage.

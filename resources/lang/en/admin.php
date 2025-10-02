@@ -9,6 +9,7 @@ return [
     ],
     'permissions' => [
         "create" => "Create a review",
+        "delete.other" => "Delete other reviews",
     ],
     'logs' => [
         "reviews-reviews" => [

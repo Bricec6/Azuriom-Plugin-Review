@@ -1,19 +1,16 @@
 <?php
 namespace Azuriom\Plugin\Review\Models;
 
-use Azuriom\Models\Traits\HasMarkdown;
 use Azuriom\Models\Traits\HasTablePrefix;
 use Azuriom\Models\Traits\HasUser;
 use Azuriom\Models\Traits\Loggable;
 use Azuriom\Models\Traits\Searchable;
 use Azuriom\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\HtmlString;
 
 class Review extends Model
 {
     use HasTablePrefix;
-    use HasMarkdown;
     use HasUser;
     use Loggable;
     use Searchable;
@@ -57,10 +54,5 @@ class Review extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function parseContent(): HtmlString
-    {
-        return $this->parseMarkdown('content', true);
     }
 }

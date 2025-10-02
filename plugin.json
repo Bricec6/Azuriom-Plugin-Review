@@ -1,8 +1,8 @@
 {
     "id": "review",
-    "name": "review",
+    "name": "Review",
     "description": "Plugin to add a review system to your website.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "url": "https://market.azuriom.com/resources/175",
     "authors": [
         "Bricec6"

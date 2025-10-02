@@ -53,7 +53,7 @@ class ReviewServiceProvider extends BasePluginServiceProvider
      */
     public function boot(): void
     {
-         $this->registerPolicies();
+        $this->registerPolicies();
 
         $this->loadViews();
 
@@ -77,7 +77,8 @@ class ReviewServiceProvider extends BasePluginServiceProvider
     protected function registerPermissions()
     {
         Permission::registerPermissions([
-            'review.create' => 'review::admin.permissions.create'
+            'review.create' => 'review::admin.permissions.create',
+            'review.delete.other' => 'review::admin.permissions.delete.other',
         ]);
     }
 

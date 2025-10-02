@@ -2,7 +2,6 @@
 
 namespace Azuriom\Plugin\Review\Policies;
 
-use Azuriom\Models\Comment;
 use Azuriom\Models\User;
 use Azuriom\Plugin\Review\Models\Review;
 use Illuminate\Auth\Access\HandlesAuthorization;
