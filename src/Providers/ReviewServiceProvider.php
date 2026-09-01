@@ -5,8 +5,12 @@ namespace Azuriom\Plugin\Review\Providers;
 use Azuriom\Extensions\Plugin\BasePluginServiceProvider;
 use Azuriom\Models\ActionLog;
 use Azuriom\Models\Permission;
+use Azuriom\Plugin\Achievement\Hooks\AchievementHook;
+use Azuriom\Plugin\Achievement\Hooks\Triggers\ModelCountTrigger;
+use Azuriom\Plugin\Achievement\Services\HookManager;
 use Azuriom\Plugin\Review\Models\Review;
 use Azuriom\Plugin\Review\Policies\ReviewPolicy;
+use Illuminate\Database\Eloquent\Builder;
 
 class ReviewServiceProvider extends BasePluginServiceProvider
 {
@@ -72,6 +76,36 @@ class ReviewServiceProvider extends BasePluginServiceProvider
         ActionLog::registerLogModels([
             Review::class,
         ], 'review::admin.logs');
+
+        $this->registerAchievementHooks();
+    }
+
+    /**
+     * Contribute review hooks & triggers to the Achievement plugin, when installed.
+     */
+    protected function registerAchievementHooks(): void
+    {
+        if (! class_exists(HookManager::class)) {
+            return;
+        }
+
+        achievement_hooks()->register(
+            AchievementHook::make('review', $this->plugin->id)
+                ->label(trans('review::messages.title'))
+                ->icon('bi bi-star-fill')
+                ->trigger(ModelCountTrigger::make(
+                    'post',
+                    trans('review::admin.achievement.post'),
+                    Review::class,
+                    'author_id'
+                ))
+                ->trigger(ModelCountTrigger::make(
+                    'five_star',
+                    trans('review::admin.achievement.five_star'),
+                    Review::class,
+                    'author_id'
+                )->where(fn (Builder $query) => $query->where('rating', '>=', 5)))
+        );
     }
 
     protected function registerPermissions()

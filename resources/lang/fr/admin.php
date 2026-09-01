@@ -19,6 +19,10 @@ return [
     'table' => [
         'rating' => 'Note',
     ],
+    'achievement' => [
+        'post' => 'Avis publié',
+        'five_star' => 'Avis 5 étoiles publié',
+    ],
     'support' => "Support Discord",
     "serveurliste" => "Liste des meilleurs serveurs",
     "contribute" => "Contribuer",

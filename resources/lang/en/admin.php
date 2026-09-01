@@ -19,6 +19,10 @@ return [
     'table' => [
         'rating' => 'Rating',
     ],
+    'achievement' => [
+        'post' => 'Review posted',
+        'five_star' => 'Five-star review posted',
+    ],
     'support' => "Discord support",
     "serveurliste" => "Top Servers listing",
     "contribute" => "Contribute",
