@@ -5,43 +5,75 @@
 @section('content')
     <h1>{{ trans('review::messages.section.title') }}</h1>
 
+    @if($average !== null)
+        <div class="d-flex align-items-center flex-wrap gap-2 mb-4">
+            <span class="h4 mb-0">{{ $average }}/5</span>
+
+            <div>
+                @for($i = 1; $i <= 5; $i++)
+                    <i class="bi bi-star{{ $i <= round($average) ? '-fill text-warning' : '' }}"></i>
+                @endfor
+            </div>
+
+            <span class="text-muted">
+                {{ trans_choice('review::messages.average', $ratingsCount, ['count' => $ratingsCount]) }}
+            </span>
+        </div>
+    @endif
+
     <div class="row gy-4">
         @foreach($reviews as $review)
             <div class="col-md-4">
                 <div class="card h-100">
-                    <div class="card-header">{{ $review->title }}</div>
+                    <div class="card-header">{{ $review->title ?? $review->authorName() }}</div>
                     <div class="card-body d-flex flex-column justify-content-between">
+                        @if($review->rating !== null)
+                            <div class="mb-3">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $review->rating)
+                                        <i class="bi bi-star-fill text-warning"></i>
+                                    @else
+                                        <i class="bi bi-star"></i>
+                                    @endif
+                                @endfor
+                            </div>
+                        @endif
+
                         <div class="mb-3">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= $review->rating)
-                                    <i class="bi bi-star-fill text-warning"></i>
-                                @else
-                                    <i class="bi bi-star"></i>
-                                @endif
-                            @endfor
+                            <p class="card-text mb-1">"{{ $review->content }}"</p>
+
+                            @if($review->isImported())
+                                <small class="text-muted">
+                                    <a class="text-muted" href="{{ $review->source_url }}" target="_blank" rel="nofollow noopener">
+                                        {{ trans('review::messages.imported.via', ['source' => $review->source]) }}
+                                    </a>
+                                </small>
+                            @endif
                         </div>
 
-                        <p class="card-text">"{{ $review->content }}"</p>
-
                         <div class="d-flex align-items-center gap-2">
-                            <img src="{{ $review->author->getAvatar(32) }}" width="32" height="32"
+                            <img src="{{ $review->getAvatar(32) }}" width="32" height="32"
                                  class="rounded-1"
-                                 alt="{{ $review->author->name }}">
+                                 alt="{{ $review->authorName() }}">
+
                             <div class="d-flex flex-column align-items-start gap-1">
-                                <span>{{ $review->author->name }}</span>
-                                <span class="badge" style="{{ $review->author->role->getBadgeStyle() }}">
-                                    @if($review->author->role->icon)
-                                        <i class="{{ $review->author->role->icon }}"></i>
-                                    @endif
-                                    {{ $review->author->role->name }}
-                            </span>
+                                <span>{{ $review->authorName() }}</span>
+
+                                @if($review->author)
+                                    <span class="badge" style="{{ $review->author->role->getBadgeStyle() }}">
+                                        @if($review->author->role->icon)
+                                            <i class="{{ $review->author->role->icon }}"></i>
+                                        @endif
+                                        {{ $review->author->role->name }}
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                             <small
-                                class="text-muted">{{ trans('review::messages.posted', ['date' => format_date($review->created_at), 'user' => $review->author->name]) }}  </small>
+                                class="text-muted">{{ trans('review::messages.posted', ['date' => format_date($review->created_at), 'user' => $review->authorName()]) }}  </small>
 
                             @can('delete', $review)
                                 <a class="text-danger" href="{{ route('review.review.destroy', $review) }}"
@@ -90,14 +122,16 @@
 @push('footer-scripts')
     <script>
         const contentInput = document.getElementById('content');
-        const contentCounter = document.getElementById('contentCounter');
-        const contentCounterMax = document.getElementById('contentCounterMax');
 
+        if (contentInput) {
+            const contentCounter = document.getElementById('contentCounter');
+            const contentCounterMax = document.getElementById('contentCounterMax');
 
-        contentCounterMax.textContent = contentInput.getAttribute('maxlength');
+            contentCounterMax.textContent = contentInput.getAttribute('maxlength');
 
-        contentInput.addEventListener('input', function () {
-            contentCounter.textContent = contentInput.value.length;
-        });
+            contentInput.addEventListener('input', function () {
+                contentCounter.textContent = contentInput.value.length;
+            });
+        }
     </script>
 @endpush

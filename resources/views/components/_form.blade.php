@@ -54,7 +54,7 @@
 @endcan
 
 @guest
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-info mt-4" role="alert">
         {{ trans('review::messages.guest') }}
     </div>
 @endguest

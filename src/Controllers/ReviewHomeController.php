@@ -12,9 +12,22 @@ class ReviewHomeController extends Controller
      */
     public function index()
     {
-        $reviews = Review::orderBy('created_at', 'asc')->paginate(9);
+        $displayImported = setting('review.display-imported', true);
 
-        return view('review::index', ['reviews' => $reviews]);
+        $reviews = Review::with('author.role')
+            ->when(! $displayImported, fn ($query) => $query->local())
+            ->latest()
+            ->paginate(setting('review.per-page', 9));
+
+        $ratings = Review::whereNotNull('rating')
+            ->when(! setting('review.average-imported', true), fn ($query) => $query->local())
+            ->selectRaw('avg(rating) as average, count(*) as total')
+            ->first();
+
+        return view('review::index', [
+            'reviews' => $reviews,
+            'average' => $ratings->average !== null ? round($ratings->average, 1) : null,
+            'ratingsCount' => $ratings->total,
+        ]);
     }
-
 }

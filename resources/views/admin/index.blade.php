@@ -41,6 +41,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">{{ trans('messages.fields.user') }}</th>
+                    <th scope="col">{{ trans('review::admin.table.source') }}</th>
                     <th scope="col">{{ trans('review::admin.table.rating') }}</th>
                     <th scope="col">{{ trans('messages.fields.title') }}</th>
                     <th scope="col">{{ trans('messages.fields.content') }}</th>
@@ -53,11 +54,24 @@
                     <tr>
                         <th scope="row">{{ $review->id }}</th>
                         <td>
-                            <a href="{{ route('admin.users.edit', $review->author) }}">
-                                {{ $review->author->name }}
-                            </a>
+                            @if($review->author)
+                                <a href="{{ route('admin.users.edit', $review->author) }}">
+                                    {{ $review->author->name }}
+                                </a>
+                            @else
+                                {{ $review->authorName() }}
+                            @endif
                         </td>
-                        <td>{{ $review->rating }}/5</td>
+                        <td>
+                            @if($review->isImported())
+                                <a href="{{ $review->source_url }}" target="_blank" rel="nofollow noopener">
+                                    {{ $review->source }}
+                                </a>
+                            @else
+                                <span class="text-muted">{{ trans('review::admin.table.local') }}</span>
+                            @endif
+                        </td>
+                        <td>{{ $review->rating !== null ? $review->rating.'/5' : '-' }}</td>
                         <td>{{ $review->title }}</td>
                         <td>{{ Str::limit($review->content, 50) }}</td>
                         <td>{{ format_date_compact($review->created_at) }}</td>

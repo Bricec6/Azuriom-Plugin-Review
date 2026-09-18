@@ -6,6 +6,11 @@ return [
         'title' => 'Reviews',
     ],
     'posted' => 'Post at :date',
+    'anonymous' => 'Anonymous',
+    'average' => '{0} No rating yet|{1} :count rating|[2,*] :count ratings',
+    'imported' => [
+        'via' => 'via :source',
+    ],
     'form' => [
         'title' => 'Add a review',
         'title_field' => 'Title',

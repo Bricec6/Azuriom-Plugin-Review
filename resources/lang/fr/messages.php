@@ -6,6 +6,11 @@ return [
         'title' => 'Avis',
     ],
     'posted' => 'Publié le :date',
+    'anonymous' => 'Anonyme',
+    'average' => '{0} Aucune note|{1} :count note|[2,*] :count notes',
+    'imported' => [
+        'via' => 'via :source',
+    ],
     'form' => [
         'title' => 'Ajouter un avis',
         'title_field' => 'Titre',

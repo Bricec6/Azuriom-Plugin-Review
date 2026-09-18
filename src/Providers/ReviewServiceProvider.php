@@ -8,8 +8,11 @@ use Azuriom\Models\Permission;
 use Azuriom\Plugin\Achievement\Hooks\AchievementHook;
 use Azuriom\Plugin\Achievement\Hooks\Triggers\ModelCountTrigger;
 use Azuriom\Plugin\Achievement\Services\HookManager;
+use Azuriom\Plugin\Review\Commands\ImportReviewsCommand;
 use Azuriom\Plugin\Review\Models\Review;
 use Azuriom\Plugin\Review\Policies\ReviewPolicy;
+use Azuriom\Plugin\Review\Sources\SourceManager;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Database\Eloquent\Builder;
 
 class ReviewServiceProvider extends BasePluginServiceProvider
@@ -49,7 +52,7 @@ class ReviewServiceProvider extends BasePluginServiceProvider
     {
         // $this->registerMiddleware();
 
-        //
+        $this->app->singleton(SourceManager::class);
     }
 
     /**
@@ -77,7 +80,33 @@ class ReviewServiceProvider extends BasePluginServiceProvider
             Review::class,
         ], 'review::admin.logs');
 
+        ActionLog::registerLogs('review.settings.updated', [
+            'icon' => 'gear',
+            'color' => 'warning',
+            'message' => 'review::admin.logs.settings',
+        ]);
+
+        ActionLog::registerLogs('review.sources.synced', [
+            'icon' => 'arrow-repeat',
+            'color' => 'info',
+            'message' => 'review::admin.logs.synced',
+        ]);
+
+        if (method_exists($this, 'registerSchedule')) {
+            $this->registerSchedule();
+        }
+
+        $this->commands(ImportReviewsCommand::class);
+
         $this->registerAchievementHooks();
+    }
+
+    /**
+     * Define the plugin command schedule.
+     */
+    protected function schedule(Schedule $schedule): void
+    {
+        $schedule->command('review:import')->hourly()->withoutOverlapping();
     }
 
     /**
@@ -124,7 +153,7 @@ class ReviewServiceProvider extends BasePluginServiceProvider
     protected function routeDescriptions(): array
     {
         return [
-            'review.index' => trans('review::messages.title')
+            'review.index' => trans('review::messages.title'),
         ];
     }
 
@@ -137,12 +166,14 @@ class ReviewServiceProvider extends BasePluginServiceProvider
     {
         return [
             $this->plugin->id => [
-                'name' => trans($this->plugin->id."::admin.plugin.name"),
+                'name' => trans($this->plugin->id.'::admin.plugin.name'),
                 'type' => 'dropdown',
                 'icon' => 'bi-patch-plus-fill',
                 'route' => $this->plugin->id.'.admin.*',
                 'items' => [
-                    $this->plugin->id . '.admin.index' => trans($this->plugin->id.'::admin.index.title')
+                    $this->plugin->id.'.admin.index' => trans($this->plugin->id.'::admin.index.title'),
+                    $this->plugin->id.'.admin.imports' => trans($this->plugin->id.'::admin.imports.title'),
+                    $this->plugin->id.'.admin.settings' => trans($this->plugin->id.'::admin.settings.title'),
                 ],
             ],
         ];
